@@ -15,12 +15,8 @@ function homePageActions(){
         let authInfo = {
             username: formData.get('username'),
             password: formData.get('password')
-<<<<<<< HEAD
         };
         debugger;
-=======
-        }
->>>>>>> 8cef204d6ffad99eba0a532db25be244d574154d
         mstrInfo.doAuthenticate(authInfo)
           .then( response => {
               window.location.replace(formAction);
