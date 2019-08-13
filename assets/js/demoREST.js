@@ -23,7 +23,7 @@ function homePageActions(){
         let authInfo = {
             username: formData.get('username'),
             password: formData.get('password')
-        }
+        };
         debugger;
         mstrInfo.doAuthenticate(authInfo)
           .then( response => {
@@ -31,7 +31,7 @@ function homePageActions(){
           })
           .then(
             console.log("populate projects and dossiers")          
-          )
+          );
     });
     
 }
