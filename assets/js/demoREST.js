@@ -16,14 +16,14 @@ function homePageActions(){
             username: formData.get('username'),
             password: formData.get('password')
         };
-        debugger;
         mstrInfo.doAuthenticate(authInfo)
-          .then( response => {
+          .then( (token) => {
+              mstrInfo.getProjects(token)
               window.location.replace(formAction);
           })
-          .then(
-            console.log("populate projects and dossiers")          
-          );
+          .catch( error => {
+            console.log("Error"  + error);
+          })
     });
     
 }
