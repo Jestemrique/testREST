@@ -1,7 +1,6 @@
 
 let pageTitle = document.title;
-var mstrInfo = JSON.parse( localStorage.getItem('mstrInfo'));
-//let mstrInfo = new MstrRest();
+//var mstrInfo = JSON.parse( localStorage.getItem('mstrInfo'));
 
 
 
