@@ -1,21 +1,14 @@
 
 let pageTitle = document.title;
-let mstrInfo = JSON.parse( localStorage.getItem('mstrInfo'));
+var mstrInfo = JSON.parse( localStorage.getItem('mstrInfo'));
+//let mstrInfo = new MstrRest();
 
-if (typeof mstrInfo != 'undefined'){
-    let mstrInfo = new MstrRest();
-}
-else{
-    alert(mstrInfo.host);
-}
 
 
 
 function homePageActions(){
-
-    //let mstrConn = new MstrRest();
+    let mstrInfo = new MstrRest();
     let loginForm = document.getElementById('mstrLoginForm');
-    
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         let formAction = loginForm.action;
@@ -24,7 +17,6 @@ function homePageActions(){
             username: formData.get('username'),
             password: formData.get('password')
         }
-        debugger;
         mstrInfo.doAuthenticate(authInfo)
           .then( response => {
               window.location.replace(formAction);
@@ -54,61 +46,3 @@ switch (pageTitle) {
 }
 
 
-
-
-
-
-// window.addEventListener('load', (event) =>{
-//     let pageTitle = document.title;
-
-//     //Home page.
-//     function pageHomeActions(){
-//         var mstrConn = new MstrRest();
-//         let loginForm = document.getElementById('mstrLoginForm');
-        
-//         loginForm.addEventListener('submit', (event) => {
-//             let formData = new FormData(loginForm);
-//             let authInfo = {
-//                 username: formData.get('username'),
-//                 password: formData.get('password')
-//             }
-//             mstrConn.doAuthenticate(authInfo)
-//              .then(response => {
-//                  console.log(response);
-//              })
-//              .catch( error  => {
-//                  console.log(error);
-//              });
-//         });
-//     }
-
-//     //Library page.
-//     function pageLibraryActions(){
-
-//     }
-
-
-
-
-
-//     switch (pageTitle) {
-//       case 'Home':
-//         console.log('Title: ' + pageTitle);  
-//         pageHomeActions();
-//         break;
-//       case 'Library':
-//         console.log('Title: ' + pageTitle);
-//         pageLibraryActions();
-//         break;
-//       default:
-//         console.log('Default action:');
-//     }
-          
-    
-
-
-
-
-
-
-// });
