@@ -17,20 +17,36 @@ function homePageActions(){
             password: formData.get('password')
         };
         mstrInfo.doAuthenticate(authInfo)
-          .then( (token) => {
-              mstrInfo.getProjects(token)
-              window.location.replace(formAction);
-              return authToken;
+          .then( (authToken) => {
+            window.location.replace(formAction);
           })
           .catch( error => {
             console.log("Error"  + error);
           })
     });
-    
 }
+
+function generateProjectsMenu(listProjects){
+  alert("Generating projects menu");
+}
+
+
 
 function libraryPageActions(){
     console.log("library");
+    //Check mstrInfo object exists to retrieve token.
+    let authToken = JSON.parse(localStorage.getItem('mstrInfo')).token;
+    let mstrInfo = new MstrRest();
+    let projectsList = mstrInfo.getProjects(authToken)
+    .then( projectList => {
+      generateProjectsMenu(projectsList);
+    })
+    .catch( error => {
+      console.log("Error generating projects menu: " + error);
+    });
+
+    alert(projectsList);
+
 }
 
 

@@ -56,15 +56,16 @@ getProjects(authToken){
         'X-MSTR-AuthToken': authToken,
       };
     
-      fetch(endPoint, {
+     return fetch(endPoint, {
         credentials: 'include',
         method: fetchMethod,
         headers: fetchHeaders
       })
-    .then( response.json() ) 
+    .then( response => response.json() ) 
     .then( json => {
         this.projectsList = json;
         debugger;
+        return this.projectsList;
     })
     .catch( (error) => {
         console.log("Error" + error);
