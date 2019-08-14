@@ -17,12 +17,21 @@ function homePageActions(){
             password: formData.get('password')
         }
         mstrInfo.doAuthenticate(authInfo)
-          .then( response => {
+          .then( authToken => {
+              mstrInfo.getProjects(authToken)
+                .then( listProjects => {
+                  console.log("Projects: " + JSON.stringify(listProjects));
+                })
+                .catch( error => {
+                  console.log(error)
+                });
               window.location.replace(formAction);
+              return authToken;
           })
-          .then(
-            console.log("populate projects and dossiers")          
-          )
+          .catch( error => {
+            console.log("Error-: " + error);
+          });
+          
     });
     
 }

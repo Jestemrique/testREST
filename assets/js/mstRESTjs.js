@@ -5,6 +5,7 @@ class MstrRest{
   baseURL = 'http://' + this.host + ':' + this.port + this.apiURL;
   loginMode = 1 //Standard
   token = null;
+  projectsList = null;
   
   constructor(){
     
@@ -60,27 +61,16 @@ getProjects(authToken){
         method: fetchMethod,
         headers: fetchHeaders
       })
-    .then( response => {
-        if ( response.ok) {
-            alert('ok');
-            return this.projectsList;
-        }
-        else{
-            throw("Error: " + response.status);
-        }
-      })
-    .catch( (error) => {
-        console.log("Error");
+    .then( response.json() ) 
+    .then( json => {
+        this.projectsList = json;
+        debugger;
     })
-    
-
-        
-    
+    .catch( (error) => {
+        console.log("Error" + error);
+    });
+   
 }
-
-  
-
-
 
 }
 
