@@ -15,23 +15,16 @@ function homePageActions(){
         let authInfo = {
             username: formData.get('username'),
             password: formData.get('password')
-        }
+        };
         mstrInfo.doAuthenticate(authInfo)
-          .then( authToken => {
-              mstrInfo.getProjects(authToken)
-                .then( listProjects => {
-                  console.log("Projects: " + JSON.stringify(listProjects));
-                })
-                .catch( error => {
-                  console.log(error)
-                });
+          .then( (token) => {
+              mstrInfo.getProjects(token)
               window.location.replace(formAction);
               return authToken;
           })
           .catch( error => {
-            console.log("Error-: " + error);
-          });
-          
+            console.log("Error"  + error);
+          })
     });
     
 }
