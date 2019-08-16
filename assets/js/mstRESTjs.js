@@ -6,9 +6,6 @@ class MstrRest{
   loginMode = 1 //Standard
   token = null;
   projectsList = null;
-  dossiersList = null;
-
-
 
 
   constructor(){
@@ -34,20 +31,8 @@ class MstrRest{
         console.log("Any other option to persist.");
         break;
     }
-
     localStorage.setItem('mstrInfo', JSON.stringify(tempMstr));
-    
-
-  }
-
-
-
-  // persistMstrInfoChanges(property, value){
-  //   let tempMstr = JSON.parse(localStorage.getItem('mstrInfo'));
-  //   tempMstr[property] = value;
-  //   localStorage.setItem('mstrInfo', JSON.stringify(tempMstr));
-    
-  // }
+  }//End persistMstrInfoChanges()
 
   doAuthenticate(authInfo){
     let endPoint = this.baseURL + '/auth/login';
@@ -72,7 +57,6 @@ class MstrRest{
         if (response.ok){
             this.token = response.headers.get('X-MSTR-AuthToken');
             localStorage.setItem('mstrInfo', JSON.stringify(this));
-            //this.persistLocalStorage(this);
             return this.token;
         }
         else{
@@ -103,7 +87,6 @@ getProjects(authToken){
     .then( json => {
         this.projectsList = json.map( project => { return {"id":project.id, "name":project.name} });
         this.persistMstrInfoChanges('projectsList', this.projectsList);
-        
         return this.projectsList;
     })
     .catch( (error) => {
