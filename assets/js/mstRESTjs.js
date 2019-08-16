@@ -7,7 +7,6 @@ class MstrRest{
   token = null;
   projectsList = null;
   dossiersList = null;
-  host = 'aps-tsiebler-vm';
 
 
 
@@ -18,10 +17,37 @@ class MstrRest{
 
   persistMstrInfoChanges(property, value){
     let tempMstr = JSON.parse(localStorage.getItem('mstrInfo'));
-    tempMstr[property] = value;
+    
+    switch (property) {
+      case 'projectsList':
+        console.log("Persisting projects");
+        tempMstr['projectsList'] = value;
+        break;
+      case 'dossiersList':
+        console.log("Persisting dossiers");
+        for (let  project of tempMstr.projectsList) {
+          let dossiersToInsert = value.filter( dossierElement => dossierElement.projectId === project.id);
+          project.dossiersList = dossiersToInsert;
+        }
+        break;
+      default:
+        console.log("Any other option to persist.");
+        break;
+    }
+
     localStorage.setItem('mstrInfo', JSON.stringify(tempMstr));
     
+
   }
+
+
+
+  // persistMstrInfoChanges(property, value){
+  //   let tempMstr = JSON.parse(localStorage.getItem('mstrInfo'));
+  //   tempMstr[property] = value;
+  //   localStorage.setItem('mstrInfo', JSON.stringify(tempMstr));
+    
+  // }
 
   doAuthenticate(authInfo){
     let endPoint = this.baseURL + '/auth/login';

@@ -1,17 +1,47 @@
 
 let pageTitle = document.title;
 
-function generateMainMenus(listItems, itemsType){
-  listItems.forEach( item => {
-    let anchorItem = document.createElement("a");
-    let anchorText = document.createTextNode(item.name);
-    anchorItem.appendChild(anchorText);
-    anchorItem.title = anchorItem.name;
-    anchorItem.href = "#";
-    anchorItem.classList.add("navbar-item");
-    document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
+
+function generateMainMenu(){
+  let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+
+  let listProjects = mstrInfo.projectsList;
+
+  let tmpListDossiers = [];
+  listProjects.forEach( project => {
+    tmpListDossiers.push(project.dossiersList.flat());
   });
+
+  let listDossiersFlat = tmpListDossiers.flat();
+  debugger;
+
+
+
+  // listItems.forEach( item => {
+  //   let anchorItem = document.createElement("a");
+  //   let anchorText = document.createTextNode(item.name);
+  //   anchorItem.appendChild(anchorText);
+  //   anchorItem.title = anchorItem.name;
+  //   anchorItem.href = "#";
+  //   anchorItem.classList.add("navbar-item");
+  //   document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
+  // });
 }//End generateMainMenus()
+
+
+
+
+// function generateMainMenus(listItems, itemsType){
+//   listItems.forEach( item => {
+//     let anchorItem = document.createElement("a");
+//     let anchorText = document.createTextNode(item.name);
+//     anchorItem.appendChild(anchorText);
+//     anchorItem.title = anchorItem.name;
+//     anchorItem.href = "#";
+//     anchorItem.classList.add("navbar-item");
+//     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
+//   });
+// }//End generateMainMenus()
 
 
 function generatePageContent(listItems, itemsType ){
@@ -73,14 +103,14 @@ function libraryPageActions(){
   let mstrInfo = new MstrRest();
   mstrInfo.getProjects(authToken)
   .then( projectsList => {
-    generateMainMenus(projectsList, 'projects');
+    //generateMainMenus(projectsList, 'projects');
     return projectsList;
   })
   .then( projectsList => {
       //debugger;
       mstrInfo.getDossiers(authToken, "FILTER_TOC")
         .then( dossiersList => {
-          generateMainMenus(dossiersList, 'dossiers');
+          //generateMainMenus(dossiersList, 'dossiers');
         })
   })
   .catch( error => {
@@ -89,19 +119,43 @@ function libraryPageActions(){
 }//End libraryPageActions();
 
 
+
+
 function projectsPageActions(){
   //console.log('Page: Projects');
   //Retreive list projects and dossiers.
+  debugger;
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
   let dossiersList = mstrInfo.dossiersList;
-  generateMainMenus(projectsList, 'projects');
-  generateMainMenus(dossiersList, 'dossiers');
+  //generateMainMenus(projectsList, 'projects');
+  //generateMainMenus(dossiersList, 'dossiers');
   generatePageContent( projectsList, 'projects');
+  generateMainMenu();
 }
 
+
+
+
+
+
+
+// function projectsPageActions(){
+//   //console.log('Page: Projects');
+//   //Retreive list projects and dossiers.
+//   debugger;
+//   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+//   let projectsList = mstrInfo.projectsList;
+//   let dossiersList = mstrInfo.dossiersList;
+//   generateMainMenus(projectsList, 'projects');
+//   generateMainMenus(dossiersList, 'dossiers');
+//   generatePageContent( projectsList, 'projects');
+// }
+
+
+
 function dossiersPageActions(){
-  //console.log('Page: Projects');
+  console.log('Page: Dossiers');
   //Retreive list projects and dossiers.
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
