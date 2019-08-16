@@ -7,12 +7,20 @@ class MstrRest{
   token = null;
   projectsList = null;
   dossiersList = null;
-  
+  host = 'aps-tsiebler-vm';
+
+
+
+
   constructor(){
     
   }
-  persistLocalStorage(item){
-    localStorage.setItem('mstrInfo', JSON.stringify(this));
+
+  persistMstrInfoChanges(property, value){
+    let tempMstr = JSON.parse(localStorage.getItem('mstrInfo'));
+    tempMstr[property] = value;
+    localStorage.setItem('mstrInfo', JSON.stringify(tempMstr));
+    
   }
 
   doAuthenticate(authInfo){
@@ -37,8 +45,8 @@ class MstrRest{
     .then( (response) => {
         if (response.ok){
             this.token = response.headers.get('X-MSTR-AuthToken');
-            //localStorage.setItem('mstrInfo', JSON.stringify(this));
-            this.persistLocalStorage();
+            localStorage.setItem('mstrInfo', JSON.stringify(this));
+            //this.persistLocalStorage(this);
             return this.token;
         }
         else{
@@ -68,7 +76,8 @@ getProjects(authToken){
     .then( response => response.json() ) 
     .then( json => {
         this.projectsList = json.map( project => { return {"id":project.id, "name":project.name} });
-        this.persistLocalStorage();
+        this.persistMstrInfoChanges('projectsList', this.projectsList);
+        
         return this.projectsList;
     })
     .catch( (error) => {
@@ -93,7 +102,7 @@ getDossiers(authToken, flagDossierInfo = 'DEFAULT'){
       .then( response => response.json() )
       .then( data => {
         this.dossiersList = data.map( dossier => { return {"id": dossier.id, "name": dossier.name, "projectId": dossier.projectId}})
-        this.persistLocalStorage();
+        this.persistMstrInfoChanges('dossiersList', this.dossiersList);
         return this.dossiersList;
       })
       .catch( (error) => {
