@@ -1,3 +1,4 @@
+main_menu_items:
 - name: Home
   link: /
 - name: Projects

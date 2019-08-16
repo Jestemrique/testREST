@@ -1,20 +1,26 @@
 <nav class="navbar" role="navigation" aria-label="main-navigation">
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-exapanded="false" data-target="navMainMenu">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
     </a>
-
+  
     <div id="navMainMenu" class="navbar-menu">
-        
-            <div class="navbar-end">
-                {% for item in site.data.nav-main %}
-                <a href="{{ item.link }}" class="navbar-item {% if page.url == item.link %} has-text-weight-bold  {% endif %} " >{{ item.name }}</a>
-                {% endfor %}
-            </div>
-        
+      <div class="navbar-end">
+          <a href="/" class="navbar-item {% if page.url == item.link %} has-text-weight-bold  {% endif %} " >Home</a>
+      
+          <div  class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="projects.html">Projects</a>
+          <div id="main-menu__item--projects" class="navbar-dropdown is-boxed"></div>
+          </div>
+  
+          <div  class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="dossiers.html">Dossiers</a>
+          <div id="main-menu__item--dossiers" class="navbar-dropdown is-boxed"></div>
+          </div>
+  
+      </div>
     </div>
-</nav>  
-
+  </nav>  
 
 
