@@ -1,7 +1,40 @@
 
 let pageTitle = document.title;
 
-function generateMainMenus(listItems, itemsType){
+
+function retrieveDossiersFromLocalStorage(){
+  let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+  let listProjects = mstrInfo.projectsList;
+  let listDossiers = [];
+
+  for (let i = 0; i < listProjects.length; i++) {
+       let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
+         let tmpDossier = {};
+         tmpDossier.id = dossier.id;
+         tmpDossier.name = dossier.name;
+         tmpDossier.projectId = dossier.projectId;
+         return tmpDossier;
+       });
+       listDossiers.push(dossiersFromProject.flat());
+    }
+  let arrayDossiers = listDossiers.flat();
+  return arrayDossiers;
+}
+
+
+
+
+function generateMainMenu(){
+  let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+  let listProjects = mstrInfo.projectsList;
+  let listDossiers = retrieveDossiersFromLocalStorage();
+  
+  generateMenu(listProjects, 'projects');
+  generateMenu(listDossiers, 'dossiers');
+}//End generateMainMenus()
+
+
+function generateMenu(listItems, itemsType){
   listItems.forEach( item => {
     let anchorItem = document.createElement("a");
     let anchorText = document.createTextNode(item.name);
@@ -11,7 +44,7 @@ function generateMainMenus(listItems, itemsType){
     anchorItem.classList.add("navbar-item");
     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
   });
-}//End generateMainMenus()
+}//End generateMenu()
 
 
 function generatePageContent(listItems, itemsType ){
@@ -49,6 +82,9 @@ function generatePageContent(listItems, itemsType ){
 function homePageActions(){
     let mstrInfo = new MstrRest();
     let loginForm = document.getElementById('mstrLoginForm');
+
+    let menuProjects = null;
+    let menuDossiers = null;
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         let formAction = loginForm.action;
@@ -58,60 +94,55 @@ function homePageActions(){
             password: formData.get('password')
         };
         mstrInfo.doAuthenticate(authInfo)
+          .then( authToken => {
+            return mstrInfo.getProjects(authToken)
+              .then( listProjects => {
+                //menuProjects = listProjects;
+                return authToken
+              });
+            })
           .then( (authToken) => {
-            window.location.replace(formAction);
+            return mstrInfo.getDossiers(authToken, "FILTER_TOC")
+              .then( listDossiers => {
+                //menuDossiers = listDossiers;
+                window.location.replace(formAction);
+                return authToken;
+              });
           })
           .catch( error => {
             console.log("Error"  + error);
-          })
+          });
     });
-}
+}//End homePageActions()
+
+
 
 function libraryPageActions(){
-  console.log("library");
-  let authToken = JSON.parse(localStorage.getItem('mstrInfo')).token;
-  let mstrInfo = new MstrRest();
-  mstrInfo.getProjects(authToken)
-  .then( projectsList => {
-    generateMainMenus(projectsList, 'projects');
-    return projectsList;
-  })
-  .then( projectsList => {
-      //debugger;
-      mstrInfo.getDossiers(authToken, "FILTER_TOC")
-        .then( dossiersList => {
-          generateMainMenus(dossiersList, 'dossiers');
-        })
-  })
-  .catch( error => {
-    console.log("Error [Library]: " + error);
-  });
+  generateMainMenu();
 }//End libraryPageActions();
 
 
+
 function projectsPageActions(){
-  //console.log('Page: Projects');
-  //Retreive list projects and dossiers.
+  console.log("Page: Projects");
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
-  let dossiersList = mstrInfo.dossiersList;
-  generateMainMenus(projectsList, 'projects');
-  generateMainMenus(dossiersList, 'dossiers');
   generatePageContent( projectsList, 'projects');
+  generateMainMenu();
 }
+
 
 function dossiersPageActions(){
-  //console.log('Page: Projects');
+  console.log('Page: Dossiers');
   //Retreive list projects and dossiers.
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
-  let dossiersList = mstrInfo.dossiersList;
-  generateMainMenus(projectsList, 'projects');
-  generateMainMenus(dossiersList, 'dossiers');
+  //let dossiersList = mstrInfo.dossiersList;
+  let dossiersList = retrieveDossiersFromLocalStorage();
   generatePageContent( dossiersList, 'dossiers');
+  generateMainMenu();
+  
 }
-
-
 
 //Actions to perform in each page.
 switch (pageTitle) {

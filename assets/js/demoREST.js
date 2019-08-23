@@ -1,25 +1,66 @@
 
 let pageTitle = document.title;
 
-
-function retrieveDossiersFromLocalStorage(){
+function retrieveDossiersFromLocalStorage( projectID = null){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let listProjects = mstrInfo.projectsList;
-  let listDossiers = [];
+  let dossiers =  null;
 
-  for (let i = 0; i < listProjects.length; i++) {
-       let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
-         let tmpDossier = {};
-         tmpDossier.id = dossier.id;
-         tmpDossier.name = dossier.name;
-         tmpDossier.projectId = dossier.projectId;
-         return tmpDossier;
-       });
-       listDossiers.push(dossiersFromProject.flat());
-    }
-  let arrayDossiers = listDossiers.flat();
-  return arrayDossiers;
+  if ( projectID !== null ){
+    dossiers = listProjects.find( project =>  project.id === projectID );
+  }
+  else{
+    dossiers = listProjects.map ( (project) => {
+      let tmpDossiers = [];
+      for (const dossier of project.dossiersList) {
+        tmpDossiers.push(dossier);
+      }
+      return tmpDossiers;
+    });
+  }
+
+  return dossiers;
 }
+
+  // let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+  // let listProjects = mstrInfo.projectsList;
+  // let listDossiers = [];
+
+  // for (let i = 0; i < listProjects.length; i++) {
+  //      let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
+  //        let tmpDossier = {};
+  //        tmpDossier.id = dossier.id;
+  //        tmpDossier.name = dossier.name;
+  //        tmpDossier.projectId = dossier.projectId;
+  //        return tmpDossier;
+  //      });
+  //      listDossiers.push(dossiersFromProject.flat());
+  //   }
+  // let arrayDossiers = listDossiers.flat();
+  // return arrayDossiers;
+//}
+
+
+
+
+// function retrieveDossiersFromLocalStorage(){
+//   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
+//   let listProjects = mstrInfo.projectsList;
+//   let listDossiers = [];
+
+//   for (let i = 0; i < listProjects.length; i++) {
+//        let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
+//          let tmpDossier = {};
+//          tmpDossier.id = dossier.id;
+//          tmpDossier.name = dossier.name;
+//          tmpDossier.projectId = dossier.projectId;
+//          return tmpDossier;
+//        });
+//        listDossiers.push(dossiersFromProject.flat());
+//     }
+//   let arrayDossiers = listDossiers.flat();
+//   return arrayDossiers;
+// }
 
 
 
@@ -93,6 +134,7 @@ function homePageActions(){
             username: formData.get('username'),
             password: formData.get('password')
         };
+        
         mstrInfo.doAuthenticate(authInfo)
           .then( authToken => {
             return mstrInfo.getProjects(authToken)
@@ -138,7 +180,11 @@ function dossiersPageActions(){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
   //let dossiersList = mstrInfo.dossiersList;
-  let dossiersList = retrieveDossiersFromLocalStorage();
+  /////////////// TESTING
+  //B19DEDCC11D4E0EFC000EB9495D0F44F
+  let dossiersList = retrieveDossiersFromLocalStorage('B19DEDCC11D4E0EFC000EB9495D0F44F');
+
+  /////////////// TESTING
   generatePageContent( dossiersList, 'dossiers');
   generateMainMenu();
   
