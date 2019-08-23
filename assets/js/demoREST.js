@@ -18,7 +18,7 @@ function retrieveDossiersFromLocalStorage( projectID = null){
       return tmpDossiers;
     });
   }
-
+  debugger;
   return dossiers;
 }
 
