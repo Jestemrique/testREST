@@ -1,5 +1,9 @@
 
 let pageTitle = document.title;
+let baseLocalURL = 'http://localhost:4000/';
+let baseLibraryURL = "http://localhost:8080/Library111U2/app/"
+
+//debugger;
 
 function retrieveDossiersFromLocalStorage( projectID = null){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
@@ -31,20 +35,44 @@ function generateMainMenu(){
 
 function generateMenu(listItems, itemsType){
   listItems.forEach( item => {
+    //debugger;
     let anchorItem = document.createElement("a");
     let anchorText = document.createTextNode(item.name);
     anchorItem.appendChild(anchorText);
     anchorItem.title = anchorItem.name;
-    anchorItem.href = "#";
+    
+    anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.id;
+    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + '/' + projectId + '/' + item.id;
+    
+    
+    
     anchorItem.classList.add("navbar-item");
     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
   });
 }//End generateMenu()
 
 
+
+// function generateMenu(listItems, itemsType){
+//   listItems.forEach( item => {
+//     let anchorItem = document.createElement("a");
+//     let anchorText = document.createTextNode(item.name);
+//     anchorItem.appendChild(anchorText);
+//     anchorItem.title = anchorItem.name;
+//     anchorItem.href = "#";
+//     anchorItem.classList.add("navbar-item");
+//     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
+//   });
+// }//End generateMenu()
+
+
 function generatePageContent(listItems, itemsType ){
+  let baseUrLink = (itemsType === 'dossiers') ? baseLibraryURL  : baseLocalURL;
+
   let itemsContainer = document.getElementById(itemsType + 'PageContent');
   
+
+
   listItems.forEach( item => {
     let itemColumn = document.createElement('div');
     itemColumn.className = 'column';
@@ -57,11 +85,23 @@ function generatePageContent(listItems, itemsType ){
     
     let itemComponent__content = document.createElement('div');
     itemComponent__content.className= 'card-content';
-    
+
     let itemContent = document.createTextNode(item.name); 
     let itemHeader =document.createTextNode(item.id);
 
-    itemComponent__content.appendChild(itemContent);
+        //create link with ID of project or dossier
+        let href_component = document.createElement('a');
+        if ( itemsType === 'dossiers'){
+          href_component.setAttribute('href', baseUrLink + item.id);  
+        }
+        else{
+          href_component.setAttribute('href', baseUrLink + 'dossiers?projectID=' + item.id);  
+        }
+        href_component.appendChild(itemContent);
+        ///End creating element href.
+    
+
+    itemComponent__content.appendChild(href_component);
     itemComponent__header.appendChild(itemHeader);
     
     itemComponent.appendChild(itemComponent__header);
@@ -132,7 +172,7 @@ function dossiersPageActions(projectID = null){
   console.log('Page: Dossiers');
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
-  let dossiersList = retrieveDossiersFromLocalStorage();
+  let dossiersList = retrieveDossiersFromLocalStorage(projectID);
   generatePageContent( dossiersList, 'dossiers');
   generateMainMenu();
   
@@ -150,7 +190,9 @@ switch (pageTitle) {
     projectsPageActions();
     break;
   case 'Dossiers':
-    dossiersPageActions();
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let projectID = params.get("projectID");
+    dossiersPageActions(projectID);
     break;
   default:
   
