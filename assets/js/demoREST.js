@@ -41,13 +41,14 @@ function generateMenu(listItems, itemsType){
     anchorItem.appendChild(anchorText);
     anchorItem.title = anchorItem.name;
     
-    anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.id;
-    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + '/' + projectId + '/' + item.id;
-    
+    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.id;
+    anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.projectId + '/' + item.targetId;
+    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : 'http://localhost:8080/Library111U2/app/AF09B3E3458F78B4FBE4DEB68528BF7B/FC72B1104C79F814743CA789B7342CE9/share'; 
     
     
     anchorItem.classList.add("navbar-item");
     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
+    //debugger;
   });
 }//End generateMenu()
 
@@ -92,10 +93,10 @@ function generatePageContent(listItems, itemsType ){
         //create link with ID of project or dossier
         let href_component = document.createElement('a');
         if ( itemsType === 'dossiers'){
-          href_component.setAttribute('href', baseUrLink + item.id);  
+          href_component.setAttribute('href', baseUrLink + item.projectId + '/' + item.targetId);  
         }
         else{
-          href_component.setAttribute('href', baseUrLink + 'dossiers?projectID=' + item.id);  
+          href_component.setAttribute('href', baseUrLink + 'dossiers?projectID=' + item.id );  
         }
         href_component.appendChild(itemContent);
         ///End creating element href.
@@ -138,7 +139,7 @@ function homePageActions(){
               });
             })
           .then( (authToken) => {
-            return mstrInfo.getDossiers(authToken, "FILTER_TOC")
+            return mstrInfo.getDossiers(authToken, "DEFAULT")
               .then( listDossiers => {
                 //menuDossiers = listDossiers;
                 window.location.replace(formAction);
