@@ -1,28 +1,23 @@
 
 let pageTitle = document.title;
 
-
-function retrieveDossiersFromLocalStorage(){
+function retrieveDossiersFromLocalStorage( projectID = null){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let listProjects = mstrInfo.projectsList;
-  let listDossiers = [];
-
-  for (let i = 0; i < listProjects.length; i++) {
-       let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
-         let tmpDossier = {};
-         tmpDossier.id = dossier.id;
-         tmpDossier.name = dossier.name;
-         tmpDossier.projectId = dossier.projectId;
-         return tmpDossier;
-       });
-       listDossiers.push(dossiersFromProject.flat());
-    }
-  let arrayDossiers = listDossiers.flat();
-  return arrayDossiers;
+  let dossiers =  [];
+  
+  if ( projectID !== null ){
+    dossiers = listProjects.find( project =>  project.id === projectID ).dossiersList;
+  }
+  else{
+    for (let project of listProjects){
+      for (let dossier of project.dossiersList) {
+        dossiers.push(dossier);
+      }
+    };
+  }
+  return dossiers;
 }
-
-
-
 
 function generateMainMenu(){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
@@ -93,6 +88,7 @@ function homePageActions(){
             username: formData.get('username'),
             password: formData.get('password')
         };
+        
         mstrInfo.doAuthenticate(authInfo)
           .then( authToken => {
             return mstrInfo.getProjects(authToken)
@@ -132,12 +128,10 @@ function projectsPageActions(){
 }
 
 
-function dossiersPageActions(){
+function dossiersPageActions(projectID = null){
   console.log('Page: Dossiers');
-  //Retreive list projects and dossiers.
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
-  //let dossiersList = mstrInfo.dossiersList;
   let dossiersList = retrieveDossiersFromLocalStorage();
   generatePageContent( dossiersList, 'dossiers');
   generateMainMenu();
