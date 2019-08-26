@@ -4,66 +4,20 @@ let pageTitle = document.title;
 function retrieveDossiersFromLocalStorage( projectID = null){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let listProjects = mstrInfo.projectsList;
-  let dossiers =  null;
-
+  let dossiers =  [];
+  
   if ( projectID !== null ){
-    dossiers = listProjects.find( project =>  project.id === projectID );
+    dossiers = listProjects.find( project =>  project.id === projectID ).dossiersList;
   }
   else{
-    dossiers = listProjects.map ( (project) => {
-      let tmpDossiers = [];
-      for (const dossier of project.dossiersList) {
-        tmpDossiers.push(dossier);
+    for (let project of listProjects){
+      for (let dossier of project.dossiersList) {
+        dossiers.push(dossier);
       }
-      return tmpDossiers;
-    });
+    };
   }
-  debugger;
   return dossiers;
 }
-
-  // let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
-  // let listProjects = mstrInfo.projectsList;
-  // let listDossiers = [];
-
-  // for (let i = 0; i < listProjects.length; i++) {
-  //      let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
-  //        let tmpDossier = {};
-  //        tmpDossier.id = dossier.id;
-  //        tmpDossier.name = dossier.name;
-  //        tmpDossier.projectId = dossier.projectId;
-  //        return tmpDossier;
-  //      });
-  //      listDossiers.push(dossiersFromProject.flat());
-  //   }
-  // let arrayDossiers = listDossiers.flat();
-  // return arrayDossiers;
-//}
-
-
-
-
-// function retrieveDossiersFromLocalStorage(){
-//   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
-//   let listProjects = mstrInfo.projectsList;
-//   let listDossiers = [];
-
-//   for (let i = 0; i < listProjects.length; i++) {
-//        let dossiersFromProject = listProjects[i].dossiersList.map( dossier =>{
-//          let tmpDossier = {};
-//          tmpDossier.id = dossier.id;
-//          tmpDossier.name = dossier.name;
-//          tmpDossier.projectId = dossier.projectId;
-//          return tmpDossier;
-//        });
-//        listDossiers.push(dossiersFromProject.flat());
-//     }
-//   let arrayDossiers = listDossiers.flat();
-//   return arrayDossiers;
-// }
-
-
-
 
 function generateMainMenu(){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
@@ -174,17 +128,11 @@ function projectsPageActions(){
 }
 
 
-function dossiersPageActions(){
+function dossiersPageActions(projectID = null){
   console.log('Page: Dossiers');
-  //Retreive list projects and dossiers.
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
   let projectsList = mstrInfo.projectsList;
-  //let dossiersList = mstrInfo.dossiersList;
-  /////////////// TESTING
-  //B19DEDCC11D4E0EFC000EB9495D0F44F
-  let dossiersList = retrieveDossiersFromLocalStorage('B19DEDCC11D4E0EFC000EB9495D0F44F');
-
-  /////////////// TESTING
+  let dossiersList = retrieveDossiersFromLocalStorage();
   generatePageContent( dossiersList, 'dossiers');
   generateMainMenu();
   
