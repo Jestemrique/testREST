@@ -1,6 +1,9 @@
 
 let pageTitle = document.title;
-let baseLocalURL = 'http://localhost:4000/';
+//let baseLocalURL = 'http://localhost:4000/';
+
+let baseLocalURL = './';
+let baseLocalURL = window.location.hostname;
 let baseLibraryURL = "http://localhost:8080/Library111U2/app/"
 
 //debugger;
