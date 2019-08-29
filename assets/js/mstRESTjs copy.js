@@ -110,7 +110,7 @@ getDossiers(authToken, flagDossierInfo = 'DEFAULT'){
     return fetch(endPoint, fetchOptions)
       .then( response => response.json() )
       .then( data => {
-        this.dossiersList = data.map( dossier => { return {"id": dossier.id, "name": dossier.name, "projectId": dossier.projectId}})
+        this.dossiersList = data.map( dossier => { return {"id": dossier.id, "name": dossier.name, "projectId": dossier.projectId, "targetId": dossier.target.id}})
         this.persistMstrInfoChanges('dossiersList', this.dossiersList);
         return this.dossiersList;
       })

@@ -1,12 +1,20 @@
-
 let pageTitle = document.title;
 let baseLocalURL = 'http://localhost:4000/';
-
-//let baseLocalURL = './';
-//let baseLocalURL = window.location.hostname;
 let baseLibraryURL = "http://localhost:8080/Library111U2/app/"
 
-//debugger;
+
+let getProjectCookie = name => {
+  let nameEQ = name + "=";
+  let ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+  let c = ca[i];
+  while (c.charAt(0) === " ") c = c.substring(1, c.length);
+  if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,
+      c.length);
+  }
+ return null;
+ };
+
 
 function retrieveDossiersFromLocalStorage( projectID = null){
   let mstrInfo = JSON.parse(localStorage.getItem('mstrInfo'));
@@ -44,12 +52,26 @@ function generateMenu(listItems, itemsType){
     anchorItem.appendChild(anchorText);
     anchorItem.title = anchorItem.name;
     
-    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.id;
-    anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : baseLibraryURL + item.projectId + '/' + item.targetId;
-    //anchorItem.href = (itemsType === 'projects') ? baseLocalURL + 'dossiers?projectID=' + item.id  : 'http://localhost:8080/Library111U2/app/AF09B3E3458F78B4FBE4DEB68528BF7B/FC72B1104C79F814743CA789B7342CE9/share'; 
+    //debugger;
+    //anchorItem.href = (itemsType === 'projects') ? './dossiers.html'  : baseLibraryURL + item.projectId + '/' + item.targetId;
     
-    
+    if (itemsType === 'projects'){
+      anchorItem.href = './dossiers.html';
+      //alert ("Hola!");
+      anchorItem.addEventListener('click', (event) => {
+        //document.cookie = "currentProjectId=" + item.id + "";
+        //debugger;
+        sessionStorage.setItem('currentProjectId', item.id);
+      });
+    }
+    else{
+      anchorItem.href = baseLibraryURL + item.projectId + '/' + item.targetId;
+    }
+
+
+    anchorItem.setAttribute("data-projectId", item.id);
     anchorItem.classList.add("navbar-item");
+    
     document.getElementById("main-menu__item--" + itemsType).appendChild(anchorItem); 
     //debugger;
   });
@@ -99,7 +121,14 @@ function generatePageContent(listItems, itemsType ){
           href_component.setAttribute('href', baseUrLink + item.projectId + '/' + item.targetId);  
         }
         else{
-          href_component.setAttribute('href', baseUrLink + 'dossiers?projectID=' + item.id );  
+          //href_component.setAttribute('href', baseUrLink + 'dossiers.html');
+          href_component.setAttribute('href', './dossiers.html');
+
+          href_component.setAttribute("data-projectId", item.id);
+          href_component.addEventListener('click', (event) => {
+            //document.cookie = "currentProjectId=" + item.id + "";
+            sessionStorage.setItem('currentProjectId', item.id);
+          });
         }
         href_component.appendChild(itemContent);
         ///End creating element href.
@@ -194,13 +223,40 @@ switch (pageTitle) {
     projectsPageActions();
     break;
   case 'Dossiers':
-    let params = new URLSearchParams(document.location.search.substring(1));
-    let projectID = params.get("projectID");
+    //let params = new URLSearchParams(document.location.search.substring(1));
+    //let projectID = params.get("projectID");
+    //let projectID = getProjectCookie('currentProjectId');
+    let projectID = sessionStorage.getItem("currentProjectId");
+    //debugger;
     dossiersPageActions(projectID);
     break;
   default:
   
   break;
 }
+
+
+
+
+// //Actions to perform in each page.
+// switch (pageTitle) {
+//   case 'Home':
+//     homePageActions();
+//     break;
+//   case 'Library':
+//     libraryPageActions();
+//     break;
+//   case 'Projects':
+//     projectsPageActions();
+//     break;
+//   case 'Dossiers':
+//     let params = new URLSearchParams(document.location.search.substring(1));
+//     let projectID = params.get("projectID");
+//     dossiersPageActions(projectID);
+//     break;
+//   default:
+  
+//   break;
+// }
 
 
