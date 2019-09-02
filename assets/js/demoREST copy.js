@@ -2,6 +2,10 @@ let pageTitle = document.title;
 let baseLocalURL = 'http://localhost:4000/';
 let baseLibraryURL = "http://localhost:8080/Library111U2/app/"
 
+// let mstrInfoTemp = JSON.parse(localStorage.getItem('mstrInfo'));
+// let baseLibraryURL = mstrInfoTemp.baseURL;
+// alert(baseLibraryURL);
+
 
 let getProjectCookie = name => {
   let nameEQ = name + "=";
@@ -45,6 +49,7 @@ function generateMainMenu(){
 
 
 function generateMenu(listItems, itemsType){
+
   listItems.forEach( item => {
     //debugger;
     let anchorItem = document.createElement("a");
@@ -93,6 +98,8 @@ function generateMenu(listItems, itemsType){
 
 
 function generatePageContent(listItems, itemsType ){
+
+
   let baseUrLink = (itemsType === 'dossiers') ? baseLibraryURL  : baseLocalURL;
 
   let itemsContainer = document.getElementById(itemsType + 'PageContent');

@@ -3,6 +3,7 @@ class MstrRest{
   port = 8080;
   apiURL = "/Library111U2/api"
   baseURL = 'http://' + this.host + ':' + this.port + this.apiURL;
+  libraryAppUrl = 'http://' + this.host + ':' + this.port + '/Library111U2/app/';
   loginMode = 1 //Standard
   token = null;
   projectsList = null;
